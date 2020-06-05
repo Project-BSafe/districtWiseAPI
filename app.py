@@ -100,7 +100,7 @@ def myfunc(chunk_size=None):
 
 @app.route('/')
 def index():
-    return "<h1>Welcome to our server !!</h1>"
+    return "<h1>Welcome to the BSafe API!</h1>\n<h2>Made with love by Team Ampersand, stay safe!</h2>"
 
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)
