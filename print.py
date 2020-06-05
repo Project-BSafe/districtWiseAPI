@@ -1,5 +1,3 @@
-import firebase_admin
-from firebase_admin import credentials, firestore, db
 import PyPDF2
 import re
 from datetime import date
@@ -8,14 +6,10 @@ from flask import jsonify, Flask
 
 import requests
 
-cred = credentials.Certificate('./ServiceAccountKey.json')
-default_app = firebase_admin.initialize_app(cred)
-db = firestore.client()
-
 app = Flask(__name__)
 
 
-@app.route('/covid19/srilanka/districts', methods=['POST'])
+@app.route('/covid19/srilanka/districts', methods=['GET'])
 def myfunc(chunk_size=None):
     distDict = {
         "Ampara": 0,
@@ -98,6 +92,9 @@ def myfunc(chunk_size=None):
     print(distDict)
     return jsonify(distDict), 200
 
+@app.route('/')
+def index():
+    return "<h1>Welcome to our server !!</h1>"
 
 if __name__ == '__main__':
-    app.run()
+    app.run(threaded=True, port=5000)
