@@ -1,6 +1,6 @@
 import PyPDF2
 import re
-from datetime import date
+from datetime import date, timedelta
 import flask
 from flask import jsonify, Flask
 
@@ -39,14 +39,20 @@ def myfunc(chunk_size=None):
         "Vavuniya": 0
     }
     today = date.today()
-    # month = today.strftime("%m")
-    # day= today.strftime("%d")
-    month = "06"
-    day = "04"
+    month = today.strftime("%m")
+    day= today.strftime("%d")
 
     url = 'http://www.epid.gov.lk/web/images/pdf/corona_virus_report/sitrep-sl-en-' + day + '-' + month + '_10.pdf'
     r = requests.get(url, stream=True)
+    print(type(r.status_code))
+    if(r.status_code!=200):
+        today=today-timedelta(days=1)
+        month = today.strftime("%m")
+        day= today.strftime("%d")
+        url = 'http://www.epid.gov.lk/web/images/pdf/corona_virus_report/sitrep-sl-en-' + day + '-' + month + '_10.pdf'
+        r = requests.get(url, stream=True)
 
+  
     with open("dailyStats.pdf", "wb") as pdf:
         for chunk in r.iter_content(chunk_size=1024):
 
