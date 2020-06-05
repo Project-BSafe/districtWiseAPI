@@ -1,7 +1,6 @@
 flask
 firebase_admin
 PyPDF2
-re
 date
 requests
 gunicorn
