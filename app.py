@@ -5,6 +5,8 @@ import flask
 from flask import jsonify, Flask
 
 import requests
+from bs4 import BeautifulSoup
+import urllib3
 
 app = Flask(__name__)
 
@@ -38,6 +40,18 @@ def myfunc(chunk_size=None):
         "Trincomalee": 0,
         "Vavuniya": 0
     }
+
+    http = urllib3.PoolManager()
+    url = "https://www.epid.gov.lk/web/index.php?option=com_content&view=article&id=225&lang=en"
+    html = http.request('GET', url)
+
+    soup = BeautifulSoup(html.data)
+
+    last_link = soup.find_all('a', href=True)[47]
+    print("https://www.epid.gov.lk"+last_link['href'])
+    url = "https://www.epid.gov.lk"+last_link['href']
+    r = requests.get(url, stream=True)
+    """
     today = date.today()
     month = today.strftime("%m")
     day= today.strftime("%d")
@@ -50,7 +64,7 @@ def myfunc(chunk_size=None):
         month = today.strftime("%m")
         day= today.strftime("%d")
         url = 'http://www.epid.gov.lk/web/images/pdf/corona_virus_report/sitrep-sl-en-' + day + '-' + month + '_10.pdf'
-        r = requests.get(url, stream=True)
+        r = requests.get(url, stream=True)"""
 
   
     with open("dailyStats.pdf", "wb") as pdf:
@@ -100,7 +114,7 @@ def myfunc(chunk_size=None):
 
 @app.route('/')
 def index():
-    return "<h1>Welcome to the BSafe API!</h1>\n<h2>Made with love by Team Ampersand, stay safe!</h2>"
+    return "<h1>Welcome to BSafe API!</h1>"
 
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)
